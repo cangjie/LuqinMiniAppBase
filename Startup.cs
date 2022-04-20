@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.OpenApi.Models;
-
+using Microsoft.EntityFrameworkCore;
 namespace LuqinMiniAppBase
 {
     public class Startup
@@ -19,6 +19,9 @@ namespace LuqinMiniAppBase
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext<Db>(
+                options => options.UseSqlServer(Util.GetDbConStr("conn.sqlserver"))
+            );
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SnowmeetApi", Version = "v1" });
