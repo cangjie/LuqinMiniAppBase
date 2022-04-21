@@ -1,5 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+
+using LuqinMiniAppBase.Models;
 namespace LuqinMiniAppBase
 {
     public class Db : DbContext
@@ -12,5 +14,11 @@ namespace LuqinMiniAppBase
         {
 
         }
+
+        public DbSet<MiniUser> miniUser { get; set; }
+
+        public DbSet<UnicUser> unicUser { get; set; }
+
+        public DbSet<Token> token { get; set; }
     }
 }
