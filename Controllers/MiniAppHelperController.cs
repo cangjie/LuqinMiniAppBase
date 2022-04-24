@@ -29,6 +29,12 @@ namespace LuqinMiniAppBase.Controllers
             _settings = Settings.GetSettings(_config);
         }
 
+        [HttpGet]
+        public ActionResult<string> GetHomePageArcitle()
+        {
+            return Util.GetWebContent("http://weixin.luqinwenda.com/subscribe/api/officialaccountapi/getdraft?offset=0");
+        }
+
         [HttpGet("{code}")]
         public async Task<ActionResult<MiniUser>> Login(string code)
         {
