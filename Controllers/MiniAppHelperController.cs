@@ -217,9 +217,11 @@ namespace LuqinMiniAppBase.Controllers
         }
 
         [HttpGet]
-        public string GetMpContent(string url)
+        public void GetMpContent(string url)
         {
-            return Util.GetWebContent(url);
+            string html = Util.GetWebContent(url);
+            Response.ContentType = "text/html";
+            Response.WriteAsync(html);
         }
         public class Code2Session
         {
