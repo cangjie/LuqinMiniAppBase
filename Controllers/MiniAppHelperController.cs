@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.IO.Pipelines;
 using System.Text;
+using System.Text.RegularExpressions;
 namespace LuqinMiniAppBase.Controllers
 {
     [Route("api/[controller]/[action]")]
@@ -222,6 +223,11 @@ namespace LuqinMiniAppBase.Controllers
         public void GetMpContent(string url)
         {
             string html = Util.GetWebContent(url);
+
+            string replaceStr = Regex.Match(html, "<div +class=\"rich_media_global_msg\" +id=\"preview_bar\" *>[\\s|\\S]+?</div>").Value.Trim();
+
+            html = html.Replace(replaceStr, "").Trim();
+
             byte[] bArr = Encoding.UTF8.GetBytes(html);
 
 
