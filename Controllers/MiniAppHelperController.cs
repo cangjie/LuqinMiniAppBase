@@ -113,7 +113,7 @@ namespace LuqinMiniAppBase.Controllers
                                     }
                                 }
                             }
-                            
+
                         }
                         catch
                         {
@@ -168,7 +168,7 @@ namespace LuqinMiniAppBase.Controllers
                             miniUser.sessionKey = sessionObj.session_key.Trim();
                         }
                     }
-                    
+
                     //set token
                     var tokenList = _db.token.Where(t => (t.state == 1
                         && t.user_id == miniUser.user_id)).ToList();
@@ -211,12 +211,16 @@ namespace LuqinMiniAppBase.Controllers
                 {
                     return NotFound();
                 }
-                
+
             }
             return NoContent();
         }
 
-
+        [HttpGet]
+        public ActionResult<string> GetMpContent(string url)
+        {
+            return Util.GetWebContent(url);
+        }
         public class Code2Session
         {
             public string openid { get; set; } = "";
