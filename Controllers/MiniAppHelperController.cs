@@ -217,7 +217,7 @@ namespace LuqinMiniAppBase.Controllers
         }
 
         [HttpGet]
-        public ActionResult<string> GetMpContent(string url)
+        public string GetMpContent(string url)
         {
             return Util.GetWebContent(url);
         }
