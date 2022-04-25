@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using LuqinMiniAppBase.Models;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-
+using System.IO;
+using System.IO.Pipelines;
+using System.Text;
 namespace LuqinMiniAppBase.Controllers
 {
     [Route("api/[controller]/[action]")]
@@ -220,8 +222,17 @@ namespace LuqinMiniAppBase.Controllers
         public void GetMpContent(string url)
         {
             string html = Util.GetWebContent(url);
+            byte[] bArr = Encoding.UTF8.GetBytes(html);
+
+
             Response.ContentType = "text/html";
-            Response.WriteAsync(html);
+            //byte[] bArr = ht
+            PipeWriter pw = Response.BodyWriter;
+            Stream s = pw.AsStream();
+            s.Write(bArr, 0, bArr.Length);
+            s.Close();
+            
+            //Response.WriteAsync(html);
         }
         public class Code2Session
         {
