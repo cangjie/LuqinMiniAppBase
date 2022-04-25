@@ -20,5 +20,8 @@ namespace LuqinMiniAppBase
         public DbSet<UnicUser> unicUser { get; set; }
 
         public DbSet<Token> token { get; set; }
+
+        public DbSet<LuqinMiniAppBase.Models.SyncSns> SyncSns { get; set; }
+
     }
 }

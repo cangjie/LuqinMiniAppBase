@@ -240,6 +240,9 @@ namespace LuqinMiniAppBase.Controllers
             
             //Response.WriteAsync(html);
         }
+
+
+
         public class Code2Session
         {
             public string openid { get; set; } = "";
