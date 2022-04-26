@@ -99,6 +99,7 @@ namespace LuqinMiniAppBase.Controllers
         [HttpPost]
         public async Task<ActionResult<Question>> PostQuestion(string sessionKey, Question question)
         {
+            sessionKey = Util.UrlDecode(sessionKey);
             int userId = _userHelper.CheckToken(sessionKey);
             if (userId == 0)
             {

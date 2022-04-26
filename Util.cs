@@ -27,6 +27,12 @@ namespace LuqinMiniAppBase
         {
             return HttpUtility.UrlEncode(urlStr.Trim().Replace(" ", "+").Replace("'", "\""));
         }
+
+        public static string UrlDecode(string urlStr)
+        {
+            return HttpUtility.UrlDecode(urlStr).Trim();
+        }
+
         public static string GetWebContent(string url)
         {
             try
