@@ -24,5 +24,7 @@ namespace LuqinMiniAppBase
         public DbSet<Question> Question { get; set; }
 
         
+        public DbSet<LuqinMiniAppBase.Models.SyncSns> SyncSns { get; set; }
+
     }
 }

@@ -8,7 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using LuqinMiniAppBase.Models;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-
+using System.IO;
+using System.IO.Pipelines;
+using System.Text;
+using System.Text.RegularExpressions;
 namespace LuqinMiniAppBase.Controllers
 {
     [Route("api/[controller]/[action]")]
@@ -113,7 +116,7 @@ namespace LuqinMiniAppBase.Controllers
                                     }
                                 }
                             }
-                            
+
                         }
                         catch
                         {
@@ -168,7 +171,7 @@ namespace LuqinMiniAppBase.Controllers
                             miniUser.sessionKey = sessionObj.session_key.Trim();
                         }
                     }
-                    
+
                     //set token
                     var tokenList = _db.token.Where(t => (t.state == 1
                         && t.user_id == miniUser.user_id)).ToList();
@@ -211,10 +214,33 @@ namespace LuqinMiniAppBase.Controllers
                 {
                     return NotFound();
                 }
-                
+
             }
             return NoContent();
         }
+
+        [HttpGet]
+        public void GetMpContent(string url)
+        {
+            string html = Util.GetWebContent(url);
+
+            string replaceStr = Regex.Match(html, "<div +class=\"rich_media_global_msg\" +id=\"preview_bar\" *>[\\s|\\S]+?</div>").Value.Trim();
+
+            html = html.Replace(replaceStr, "").Trim();
+
+            byte[] bArr = Encoding.UTF8.GetBytes(html);
+
+
+            Response.ContentType = "text/html";
+            //byte[] bArr = ht
+            PipeWriter pw = Response.BodyWriter;
+            Stream s = pw.AsStream();
+            s.Write(bArr, 0, bArr.Length);
+            s.Close();
+            
+            //Response.WriteAsync(html);
+        }
+
 
 
         public class Code2Session
