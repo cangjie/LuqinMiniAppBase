@@ -55,7 +55,19 @@ namespace LuqinMiniAppBase.Controllers
             }
             return userId;
         }
-
+        [NonAction]
+        public int CheckToken(string token)
+        {
+            int userId = 0;
+            var list = _db.token.Where(t => (t.token.Trim().Equals(token.Trim()) && t.state == 1
+                && t.original_id.Trim().Equals(_settings.originalId))).ToList();
+            if (list != null && list.Count != 0)
+            {
+                userId = list[0].user_id;
+            }
+            return userId;
+        }
+        
 
     }
 }
