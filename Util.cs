@@ -30,7 +30,7 @@ namespace LuqinMiniAppBase
 
         public static string UrlDecode(string urlStr)
         {
-            return HttpUtility.UrlDecode(urlStr).Trim().Replace(" ", "+");
+            return HttpUtility.UrlDecode(urlStr).Replace(" ", "+").Trim();
         }
 
         public static string GetWebContent(string url)
