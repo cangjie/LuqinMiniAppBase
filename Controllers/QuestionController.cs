@@ -24,22 +24,30 @@ namespace LuqinMiniAppBase.Controllers
 
         private readonly Settings _settings;
 
+        private readonly UserHelperController _userHelper;
+
         public QuestionController(Db db, IConfiguration config)
         {
             _db = db;
             _config = config;
             _settings = Settings.GetSettings(_config);
+            _userHelper = new UserHelperController(_db, _config);
         }
 
-        /*
+        
 
         // GET: api/Question
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Question>>> GetQuestion()
+        public async Task<ActionResult<IEnumerable<Question>>> GetQuestion(string sessionKey)
         {
-            return await _db.Question.ToListAsync();
+            int userId = _userHelper.CheckToken(sessionKey);
+            if (userId == 0)
+            {
+                return NotFound();
+            }
+            return await _db.Question.Where(q => q.user_id == userId).OrderByDescending(q=>q.id).ToListAsync();
         }
-        */
+        
         // GET: api/Question/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Question>> GetQuestion(int id)
@@ -91,8 +99,7 @@ namespace LuqinMiniAppBase.Controllers
         [HttpPost]
         public async Task<ActionResult<Question>> PostQuestion(string sessionKey, Question question)
         {
-            UserHelperController userHelper = new UserHelperController(_db, _config);
-            int userId = userHelper.CheckToken(sessionKey);
+            int userId = _userHelper.CheckToken(sessionKey);
             if (userId == 0)
             {
                 return NotFound();

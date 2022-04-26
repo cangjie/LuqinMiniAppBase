@@ -12,5 +12,6 @@ namespace LuqinMiniAppBase.Models
         public int user_id { get; set; }
         public string topic { get; set; }
         public string status { get; set; }
+        public DateTime create_date { get; set; }
     }
 }
