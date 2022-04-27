@@ -41,6 +41,7 @@ namespace LuqinMiniAppBase
             }
 
             app.UseRouting();
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
