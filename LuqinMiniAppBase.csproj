@@ -39,10 +39,12 @@
   <ItemGroup>
     <Content Remove="wwwroot\" />
     <Content Remove="wwwroot\images\" />
+    <Content Remove="wwwroot\mapp\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\" />
     <Folder Include="wwwroot\images\" />
     <Folder Include="Views\" />
+    <Folder Include="wwwroot\mapp\" />
   </ItemGroup>
 </Project>
