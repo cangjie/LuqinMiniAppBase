@@ -26,6 +26,7 @@ namespace LuqinMiniAppBase
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "LuqinMiniApp", Version = "v1" });
             });
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
