@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
 
 using LuqinMiniAppBase.Models;
@@ -25,6 +25,9 @@ namespace LuqinMiniAppBase
 
         
         public DbSet<LuqinMiniAppBase.Models.SyncSns> SyncSns { get; set; }
+
+        
+        public DbSet<LuqinMiniAppBase.Models.QrCodeScanLog> QrCodeScanLog { get; set; }
 
     }
 }
