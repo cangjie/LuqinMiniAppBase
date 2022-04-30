@@ -8,6 +8,7 @@ namespace LuqinMiniAppBase.Models
         public string? appSecret { get; set; }
         public string? originalId { get; set; }
         public string? token { get; set; }
+        public string? mediaRoot { get; set; }
 
         public static Settings GetSettings(IConfiguration config)
         {
@@ -16,12 +17,15 @@ namespace LuqinMiniAppBase.Models
             string appSecret = settings.GetSection("AppSecret").Value.Trim();
             string originalId = settings.GetSection("OriginalId").Value.Trim();
             string token = settings.GetSection("token").Value.Trim();
+            string mediaRoot = settings.GetSection("MediaRoot").Value.Trim();
+
             return new Settings()
             {
                 appId = appId,
                 appSecret = appSecret,
                 originalId = originalId,
-                token = token
+                token = token,
+                mediaRoot = mediaRoot
             };
         }
     }

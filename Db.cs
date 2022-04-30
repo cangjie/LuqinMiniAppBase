@@ -29,5 +29,9 @@ namespace LuqinMiniAppBase
         
         public DbSet<LuqinMiniAppBase.Models.QrCodeScanLog> QrCodeScanLog { get; set; }
 
+        public DbSet<Meida> meida { get; set; }
+
+        public DbSet<UserMediaAsset> userMediaAsset { get; set; }
+
     }
 }
