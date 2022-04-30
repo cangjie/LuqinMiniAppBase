@@ -38,6 +38,7 @@ namespace LuqinMiniAppBase.Controllers
             {
                 id = media.id,
                 name = media.name,
+                type = media.type,
                 thumb = media.thumb
             };
             return ret;
