@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using LuqinMiniAppBase.Models;
-
+using System.Collections.Generic;
 
 namespace LuqinMiniAppBase.Controllers
 {
@@ -31,15 +31,18 @@ namespace LuqinMiniAppBase.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Meida>> GetMedia(int id)
+        public async Task<ActionResult<Media>> GetMedia(int id)
         {
-            Meida media = await _db.meida.FindAsync(id);
-            Meida ret = new Meida()
+            List<MediaSubTitle> list = _db.mediaSubtitle.Where(t => t.media_id == id).ToList();
+            Media media = await _db.media.FindAsync(id);
+            
+            Media ret = new Media()
             {
                 id = media.id,
                 name = media.name,
                 type = media.type,
-                thumb = media.thumb
+                thumb = media.thumb,
+                mediaSubTitles = list
             };
             return ret;
         }
@@ -48,7 +51,7 @@ namespace LuqinMiniAppBase.Controllers
         public async Task<IActionResult> PlayMedia(int id, string sessionKey)
         {
             sessionKey = Util.UrlDecode(sessionKey);
-            Meida media = await _db.meida.FindAsync(id);
+            Media media = await _db.media.FindAsync(id);
 
             if (media == null)
             {

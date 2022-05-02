@@ -12,7 +12,13 @@ namespace LuqinMiniAppBase
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+           /*
+            modelBuilder.Entity<MediaSubTitle>()
+                .HasOne(ms => ms.media_id)
+                .WithMany(m => m.mediaSubTitles)
+                .HasForeignKey(ms => ms.media_id)
+                .HasPrincipalKey(m => m.id);
+            */
         }
 
         public DbSet<MiniUser> miniUser { get; set; }
@@ -29,7 +35,9 @@ namespace LuqinMiniAppBase
         
         public DbSet<LuqinMiniAppBase.Models.QrCodeScanLog> QrCodeScanLog { get; set; }
 
-        public DbSet<Meida> meida { get; set; }
+        public DbSet<Media> media { get; set; }
+
+        public DbSet<MediaSubTitle> mediaSubtitle { get; set; }
 
         public DbSet<UserMediaAsset> userMediaAsset { get; set; }
 

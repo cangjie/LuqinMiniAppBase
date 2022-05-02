@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace LuqinMiniAppBase.Models
 {
     [Table("media")]
-    public class Meida
+    public class Media
     {
         [Key]
         public int id { get; set; }
@@ -14,6 +15,9 @@ namespace LuqinMiniAppBase.Models
         public string path { get; set; } = "";
         public int free { get; set; } = 0;
         public string thumb { get; set; } = "";
+
+        [ForeignKey("media_id")]
+        public List<MediaSubTitle> mediaSubTitles { get; set; }
 
     }
 }
