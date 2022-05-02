@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore;
 
 using LuqinMiniAppBase.Models;
@@ -40,6 +40,8 @@ namespace LuqinMiniAppBase
         public DbSet<MediaSubTitle> mediaSubtitle { get; set; }
 
         public DbSet<UserMediaAsset> userMediaAsset { get; set; }
+
+        public DbSet<LuqinMiniAppBase.Models.UserStudyProgress> UserStudyProgress { get; set; }
 
     }
 }
