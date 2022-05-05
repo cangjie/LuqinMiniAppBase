@@ -44,7 +44,8 @@ namespace LuqinMiniAppBase.Controllers
                 thumb = media.thumb,
                 mediaSubTitles = list
             };
-            return ret;
+            
+            return media;
         }
 
         [HttpGet("{id}")]

@@ -16,15 +16,17 @@ namespace LuqinMiniAppBase.Models
         public int start_position { get; set; }
         public int end_position { get; set; }
 
+        /*
         public static explicit operator MediaSubTitle(UserStudyProgress v)
         {
             throw new NotImplementedException();
         }
-
+        */
         //[ForeignKey("media_subtitle_id")]
         //public List<UserStudyProgress> userStudyProgress { get; set; }
 
-        //public Media media { get; set; }
+        //[ForeignKey("media_id")]
+        //public Media media { get; set; } = null;
 
     }
 }
