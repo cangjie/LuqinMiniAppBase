@@ -117,7 +117,7 @@ namespace LuqinMiniAppBase.Controllers
             fs.Close();
             fs.Dispose();
             //s.Write(buffer);
-            await s.WriteAsync(buffer);
+            s.Write(buffer);
             s.Close();
             s.Dispose();
             return NoContent();
