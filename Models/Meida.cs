@@ -16,6 +16,10 @@ namespace LuqinMiniAppBase.Models
         public int free { get; set; } = 0;
         public string thumb { get; set; } = "";
 
+        public int duration { get; set; } = 0;
+
+        public int file_size { get; set; } = 0;
+
         [ForeignKey("media_id")]
         public List<MediaSubTitle> mediaSubTitles { get; set; }
 
