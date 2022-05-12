@@ -41,9 +41,9 @@ namespace LuqinMiniAppBase.Controllers
                 return NotFound();
             }
             var list = await _db.UserStudyProgress
-                .Include(m => m.mediaSubTitle)
+                //.Include(m => m.mediaSubTitle)
                 //.Include(m => m.mediaSubTitle.media)
-                .Where( u => u.mediaSubTitle.media_id == mediaId)
+                .Where( u => (u.mediaSubTitle.media_id == mediaId && u.user_id == userId))
                 .ToListAsync();
             return list;
         }
