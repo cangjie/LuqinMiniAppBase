@@ -365,3 +365,4 @@ conn.sqlserver
 appsettings.json
 appsettings.Development.json
 media/*
+/access_token.official_account
