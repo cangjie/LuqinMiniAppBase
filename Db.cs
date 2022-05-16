@@ -43,5 +43,9 @@ namespace LuqinMiniAppBase
 
         public DbSet<LuqinMiniAppBase.Models.UserStudyProgress> UserStudyProgress { get; set; }
 
+        public DbSet<LuqinMiniAppBase.Models.OAReceive> oAReceive { get; set; }
+
+        public DbSet<LuqinMiniAppBase.Models.OASent> oASent { get; set; }
+
     }
 }
