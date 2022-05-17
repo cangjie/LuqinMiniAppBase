@@ -47,5 +47,9 @@ namespace LuqinMiniAppBase
 
         public DbSet<LuqinMiniAppBase.Models.OASent> oASent { get; set; }
 
+        public DbSet<LuqinMiniAppBase.Models.WepayKey> wepayKey { get; set; }
+
+        public DbSet<LuqinMiniAppBase.Models.WepayOrder> wepayOrder { get; set; }
+
     }
 }
