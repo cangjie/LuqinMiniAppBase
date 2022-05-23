@@ -73,7 +73,7 @@ namespace LuqinMiniAppBase.Controllers
         {
             string openId = "";
             var userList = _db.miniUser.Where(u => (u.original_id.Trim().Equals(originalId.Trim())
-                && u.id == userId)).ToList();
+                && u.user_id == userId)).ToList();
             if (userList.Count > 0)
             {
                 openId = userList[0].open_id.Trim();
