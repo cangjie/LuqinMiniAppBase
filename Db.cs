@@ -51,5 +51,9 @@ namespace LuqinMiniAppBase
 
         public DbSet<LuqinMiniAppBase.Models.WepayOrder> wepayOrder { get; set; }
 
+        public DbSet<Promote> promote { get; set; }
+
+        
+
     }
 }
