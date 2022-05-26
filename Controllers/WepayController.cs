@@ -215,7 +215,7 @@ namespace LuqinMiniAppBase.Controllers
 
                 var certManager = new InMemoryCertificateManager();
 
-                CertificateEntry ce = new CertificateEntry(serial, cerStr, DateTimeOffset.MinValue, DateTimeOffset.MinValue);
+                CertificateEntry ce = new CertificateEntry(serial, cerStr, DateTimeOffset.MinValue, DateTimeOffset.MaxValue);
 
                 //certManager.SetCertificate(serial, cerStr);
                 certManager.AddEntry(ce);
