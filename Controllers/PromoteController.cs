@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
-using System.Data.Entity;
 using System;
 using System.Data;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -110,7 +109,7 @@ namespace LuqinMiniAppBase.Controllers
 
             return retList;
 
-            return NoContent();
+            //return NoContent();
         }
 
 
