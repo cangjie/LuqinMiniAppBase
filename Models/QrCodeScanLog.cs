@@ -15,7 +15,7 @@ namespace LuqinMiniAppBase.Models
         public string open_id { get; set; }
         public int deal { get; set; } = 0;
 
-        public DateTime create_date { get; set; }
+        public DateTime create_date { get; set; } = DateTime.Now;
         
     }
 }
