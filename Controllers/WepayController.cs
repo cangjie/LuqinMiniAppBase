@@ -248,6 +248,7 @@ namespace LuqinMiniAppBase.Controllers
                             }
                             WepayOrder wepayOrder = await _db.wepayOrder.FindAsync(outTradeNumber);
                             wepayOrder.state = 2;
+                            wepayOrder.transaction_id = transactionId.Trim();
                             _db.Entry(wepayOrder).State = EntityState.Modified;
                             await _db.SaveChangesAsync();
                         }
@@ -269,5 +270,173 @@ namespace LuqinMiniAppBase.Controllers
             return "{ \r\n \"code\": \"SUCCESS\", \r\n \"message\": \"成功\" \r\n}";
         }
 
+        [HttpGet("{outTradeNo}")]
+        public async Task<ActionResult<WepayOrderRefund>> Refund(string outTradeNo, double amount, string reason, string sessionKey)
+        {
+            int realAmount = (int)Math.Round(amount * 100, 0);
+            sessionKey = Util.UrlDecode(sessionKey);
+            reason = Util.UrlDecode(reason);
+            UserHelperController uc = new UserHelperController(_db, _config);
+            int userId = uc.CheckToken(sessionKey.Trim());
+            if (userId <= 0)
+            {
+                return NotFound();
+            }
+            UnicUser user = await _db.unicUser.FindAsync(userId);
+            if (user.is_admin == 0)
+            {
+                return NoContent();
+            }
+            WepayOrder order = await _db.wepayOrder.FindAsync(outTradeNo);
+            WepayOrderRefund refund = new WepayOrderRefund()
+            {
+                id = 0,
+                amount = realAmount,
+                state = 0,
+                oper_user_id = userId,
+                wepay_out_trade_no = outTradeNo.Trim()
+
+            };
+            await _db.wepayOrderRefund.AddAsync(refund);
+            await _db.SaveChangesAsync();
+
+            WepayKey key = await _db.wepayKey.FindAsync(order.mch_id);
+            var certManager = new InMemoryCertificateManager();
+            var options = new WechatTenpayClientOptions()
+            {
+                MerchantId = key.mch_id.Trim(),
+                MerchantV3Secret = "",
+                MerchantCertificateSerialNumber = key.key_serial.Trim(),
+                MerchantCertificatePrivateKey = key.private_key.Trim(),
+                PlatformCertificateManager = certManager
+            };
+            var client = new WechatTenpayClient(options);
+            var request = new CreateRefundDomesticRefundRequest()
+            {
+                TransactionId = order.transaction_id.Trim(),
+                OutRefundNumber = refund.id.ToString(),
+                Amount = new CreateRefundDomesticRefundRequest.Types.Amount()
+                {
+                    Total = order.amount,
+                    Refund = realAmount
+                },
+                Reason = reason,
+                NotifyUrl = "https://mini.luqinweneda.com/api/Wepay/RefundCallback"
+            };
+            var response = await client.ExecuteCreateRefundDomesticRefundAsync(request);
+            if (!response.IsSuccessful())
+            {
+                return NotFound();
+            }
+            refund.state = 1;
+            _db.Entry(refund).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+            //var result = JsonResult(response);
+            return refund;
+            //client.ExecuteCreateRefundDomesticRefundAsync()
+            //var request = new Create
+            //return NoContent();
+        }
+
     }
+
+    /*
+
+
+    [HttpGet("{outTradeNo}")]
+    public async Task<ActionResult<string>> Refund(string outTradeNo, int amount, string sessionKey)
+    {
+        sessionKey = Util.UrlDecode(sessionKey);
+        UnicUser._context = _context;
+        UnicUser user = UnicUser.GetUnicUser(sessionKey);
+        if (user == null || !user.isAdmin)
+        {
+            return NotFound();
+        }
+        string operName = "管理员申请退款";
+
+        WepayOrder wepayOrder = _context.WepayOrders.Find(outTradeNo);
+        if (wepayOrder == null)
+        {
+            return NotFound();
+        }
+        int parseResult = 0;
+        var wepayOrderRefundArr =
+            _context.WePayOrderRefund.Where(r => r.wepay_out_trade_no == outTradeNo).ToList<WepayOrderRefund>();
+        int totalRefundAmount = 0;
+        for (int i = 0; i < wepayOrderRefundArr.Count; i++)
+        {
+            WepayOrderRefund currentRefund = wepayOrderRefundArr[i];
+            if (int.TryParse(currentRefund.status, out parseResult))
+                totalRefundAmount = wepayOrderRefundArr[i].amount + totalRefundAmount;
+        }
+        if (totalRefundAmount + amount <= wepayOrder.amount)
+        {
+            WepayOrderRefund refund = new WepayOrderRefund();
+            refund.amount = amount;
+            refund.oper_open_id = user.miniAppOpenId.Trim();
+            refund.status = "";
+            refund.wepay_out_trade_no = wepayOrder.out_trade_no.Trim();
+            _context.WePayOrderRefund.Add(refund);
+            _context.SaveChanges();
+
+            int mchid = wepayOrder.mch_id;
+            WepayKey key = _context.WepayKeys.Find(mchid);
+            if (key == null)
+            {
+                return NotFound();
+            }
+            var certManager = new InMemoryCertificateManager();
+            var options = new WechatTenpayClientOptions()
+            {
+                MerchantId = key.mch_id.Trim(),
+                MerchantV3Secret = "",
+                MerchantCertSerialNumber = key.key_serial.Trim(),
+                MerchantCertPrivateKey = key.private_key.Trim(),
+                CertificateManager = certManager
+            };
+            string refundTransId = refund.wepay_out_trade_no + refund.id.ToString().PadLeft(2, '0');
+            var client = new WechatTenpayClient(options);
+            var request = new CreateRefundDomesticRefundRequest()
+            {
+                OutTradeNumber = wepayOrder.out_trade_no.Trim(),
+                OutRefundNumber = refundTransId.Trim(),
+                Amount = new CreateRefundDomesticRefundRequest.Types.Amount()
+                {
+                    Total = wepayOrder.amount,
+                    Refund = amount
+                },
+                Reason = operName,
+                NotifyUrl = wepayOrder.notify.Replace("PaymentCallback", "RefundCallback")
+            };
+            var response = await client.ExecuteCreateRefundDomesticRefundAsync(request);
+            try
+            {
+                string refundId = response.RefundId.Trim();
+                if (refundId == null || refundId.Trim().Equals(""))
+                {
+                    return NotFound();
+                }
+                refund.status = refundId;
+                _context.Entry<WepayOrderRefund>(refund).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                await Response.WriteAsync("SUCCESS");
+            }
+            catch
+            {
+                refund.status = response.ErrorMessage.Trim();
+                _context.Entry<WepayOrderRefund>(refund).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return NotFound();
+            }
+
+
+
+        }
+        return NotFound();
+    }
+
+    */
+
+
 }

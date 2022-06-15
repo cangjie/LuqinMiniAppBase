@@ -11,7 +11,7 @@ namespace LuqinMiniAppBase.Models
         public int id { get; set; }
         public string wepay_out_trade_no { get; set; }
         public int amount { get; set; }
-        public string status { get; set; }
-        public string oper_open_id { get; set; }
+        public int state { get; set; }
+        public int oper_user_id { get; set; }
     }
 }

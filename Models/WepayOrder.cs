@@ -25,5 +25,6 @@ namespace LuqinMiniAppBase.Models
         public int state { get; set; }
         public int mch_id { get; set; }
         public string prepay_id { get; set; }
+        public string transaction_id { get; set; } = "";
     }
 }
