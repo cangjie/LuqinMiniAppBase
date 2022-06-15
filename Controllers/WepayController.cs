@@ -141,7 +141,7 @@ namespace LuqinMiniAppBase.Controllers
         }
 
         [HttpPost("{mchId}")]
-        public ActionResult<string> PaymentCallback(int mchId, CallBackStruct postData)
+        public async Task<ActionResult<string>> PaymentCallback(int mchId, CallBackStruct postData)
         {
 
             string apiKey = "";
@@ -246,6 +246,10 @@ namespace LuqinMiniAppBase.Controllers
                                 sw.WriteLine("");
                                 sw.Close();
                             }
+                            WepayOrder wepayOrder = await _db.wepayOrder.FindAsync(outTradeNumber);
+                            wepayOrder.state = 2;
+                            _db.Entry(wepayOrder).State = EntityState.Modified;
+                            await _db.SaveChangesAsync();
                         }
                         catch
                         {
