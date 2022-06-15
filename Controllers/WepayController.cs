@@ -140,12 +140,12 @@ namespace LuqinMiniAppBase.Controllers
            
         }
 
-        [HttpPost("{mchid}")]
-        public ActionResult<string> PaymentCallback(int mchid, CallBackStruct postData)
+        [HttpPost("{mchId}")]
+        public ActionResult<string> PaymentCallback(int mchId, CallBackStruct postData)
         {
 
             string apiKey = "";
-            WepayKey key = _db.wepayKey.Find(mchid);
+            WepayKey key = _db.wepayKey.Find(mchId);
 
             if (key == null)
             {
