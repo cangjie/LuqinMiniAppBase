@@ -13,5 +13,6 @@ namespace LuqinMiniAppBase.Models
         public int amount { get; set; }
         public int state { get; set; }
         public int oper_user_id { get; set; }
+        public string err_msg { get; set; } = "";
     }
 }

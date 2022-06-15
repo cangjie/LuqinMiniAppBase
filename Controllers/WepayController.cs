@@ -326,9 +326,13 @@ namespace LuqinMiniAppBase.Controllers
             var response = await client.ExecuteCreateRefundDomesticRefundAsync(request);
             if (!response.IsSuccessful())
             {
-                return NotFound();
+                refund.err_msg = response.ErrorMessage.Trim();
             }
-            refund.state = 1;
+            else
+            {
+                refund.state = 1;
+                refund.err_msg = "";
+            }
             _db.Entry(refund).State = EntityState.Modified;
             await _db.SaveChangesAsync();
             //var result = JsonResult(response);
