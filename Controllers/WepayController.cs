@@ -58,7 +58,7 @@ namespace LuqinMiniAppBase.Controllers
         [HttpGet("{mchId}")]
         public async Task<ActionResult<WepayOrder>> Pay(int mchId, string sessionKey, double amount, string memo)
         {
-            string callBack = "https://mini.luqinwenda.com/api/Wepay/PaymentCallback/" + mchId.ToString();
+            string callBack = "https://mini.luqinwenda.com/api/Wepay/PaymentCallback";// + mchId.ToString();
             WepayKey key = await _db.wepayKey.FindAsync(mchId);
             if (key == null)
             {
