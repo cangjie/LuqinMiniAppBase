@@ -43,10 +43,14 @@
     <Content Remove="wwwroot\" />
     <Content Remove="wwwroot\images\" />
     <Content Remove="wwwroot\mapp\" />
+    <Content Remove="wwwroot\images\sign_up\" />
+    <Content Remove="wwwroot\images\sign_up\british_2023\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
     <Folder Include="Views\" />
     <Folder Include="wwwroot\mapp\" />
+    <Folder Include="wwwroot\images\sign_up\" />
+    <Folder Include="wwwroot\images\sign_up\british_2023\" />
   </ItemGroup>
 </Project>
