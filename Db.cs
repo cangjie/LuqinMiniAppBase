@@ -55,6 +55,8 @@ namespace LuqinMiniAppBase
 
         public DbSet<Promote> promote { get; set; }
 
+        public DbSet<LuqinMiniAppBase.Models.Reserve> Reserve { get; set; }
+
         
 
     }
