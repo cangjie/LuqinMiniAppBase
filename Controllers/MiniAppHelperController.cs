@@ -218,7 +218,7 @@ namespace LuqinMiniAppBase.Controllers
                                     miniUser = new MiniUser()
                                     {
                                         id = 0,
-                                        user_id = userId,
+                                        user_id = unicUser.id,
                                         open_id = openId.Trim(),
                                         original_id = _settings.originalId.Trim(),
                                         sessionKey = sessionObj.session_key.Trim()
