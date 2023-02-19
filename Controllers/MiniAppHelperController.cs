@@ -186,8 +186,16 @@ namespace LuqinMiniAppBase.Controllers
                             if (unicUser.id > 0)
                             {
                                 string openId = sessionObj.openid.Trim();
-                                miniUser = userHelper.GetMiniUser(openId.Trim()).Value;
-                                if (miniUser != null)
+                                try
+                                {
+                                    miniUser = userHelper.GetMiniUser(openId.Trim()).Value;
+                                }
+                                catch
+                                {
+
+                                }
+                                
+                                if (miniUser != null && miniUser.user_id > 0)
                                 {
                                     if (miniUser.user_id != userId)
                                     {

@@ -39,7 +39,8 @@ namespace LuqinMiniAppBase.Controllers
                 return BadRequest();
             }
 
-            var reserveList = await _db.Reserve.Where(r => (r.act_id == actId && r.user_id == userId)).ToListAsync();
+            var reserveList = await _db.Reserve.Where(r => (r.act_id == actId
+            && (r.user_id == userId || r.filled_cell.Trim().Equals(cell.Trim())))).ToListAsync();
             if (reserveList != null && reserveList.Count > 0)
             {
                 return NotFound();
