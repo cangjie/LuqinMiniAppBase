@@ -13,6 +13,9 @@ namespace LuqinMiniAppBase.Models
 		public string filled_name { get; set; }
 		public string filled_cell { get; set; }
 		public DateTime create_date { get; set; }
+
+		[NotMapped]
+		public string memo { get; set; }
 	}
 }
 

@@ -59,6 +59,57 @@ namespace LuqinMiniAppBase.Controllers
             return Ok(reserve);
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Reserve>>> GetAdList()
+        {
+            DateTime now = DateTime.Now;
+            var list = await _db.Reserve.OrderByDescending(r => r.id).ToListAsync() ;
+            for (int i = 0; i < list.Count; i++)
+            {
+                string cell = list[i].filled_cell.Trim();
+                if (cell.Length == 11)
+                {
+                    cell = cell.Substring(0, 3) + "****" + cell.Substring(7, 4);
+                }
+                list[i].filled_cell = cell;
+                string name = list[i].filled_name;
+                switch (name.Length)
+                {
+                    case 0:
+                        name = "*";
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        name = name.Substring(0, 1) + "*";
+                        break;
+                    case 3:
+                        name = name.Substring(0, 1) + "*" + name.Substring(2, 1);
+                        break;
+                    default:
+                        name = name.Substring(0, 1) + "**" + name.Substring(3, name.Length - 3); 
+                        break;
+                }
+                list[i].filled_name = name;
+                TimeSpan ts = now - list[i].create_date;
+                string memo = "";
+                if (ts.Hours == 0)
+                {
+                    memo = ts.Minutes.ToString() + "分钟前";
+                }
+                else if (ts.Days == 0)
+                {
+                    memo = ts.Hours.ToString() + "小时前";
+                }
+                else
+                {
+                    memo = ts.Days.ToString() + "天前";
+                }
+                list[i].memo = memo;
+            }
+            return Ok(list);
+        }
+
 
 
         /*
