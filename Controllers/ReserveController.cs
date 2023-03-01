@@ -59,6 +59,7 @@ namespace LuqinMiniAppBase.Controllers
             return Ok(reserve);
         }
 
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Reserve>>> GetAdList()
         {
@@ -110,7 +111,11 @@ namespace LuqinMiniAppBase.Controllers
             return Ok(list);
         }
 
-
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Reserve>>> GetList()
+        {
+            return await _db.Reserve.OrderByDescending(r => r.id).ToListAsync();
+        }
 
         /*
         // GET: api/Reserve

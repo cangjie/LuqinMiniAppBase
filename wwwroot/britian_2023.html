@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>2023英国报名</title>
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/bootstrap-grid.css" />
+    <link rel="stylesheet" href="css/bootstrap-reboot.css" />
+    <script type="text/javascript" src="js/jquery-3.6.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/Util.js?sdfsdsw"></script>
+</head>
+<body>
+    <table class="table" >
+        <thead>
+            <tr>
+                <td><b>姓名</b></td>
+                <td><b>电话</b></td>
+                <td><b>注册时间</b></td>
+            </tr>
+        </thead>
+        <tbody id="data" >
+
+        </tbody>
+    </table>
+
+
+
+</body>
+
+</html>
+<script type="text/javascript">
+    $.ajax({
+        url: '/api/Reserve/GetList',
+        type: 'GET',
+        success: function (msg, status) {
+            console.log(status);
+            if (status == 'success') {
+                var data = document.getElementById('data');
+                for (var i = 0; i < msg.length; i++) {
+                    var item = msg[i];
+                    var tr = document.createElement('tr');
+                    var tdName = document.createElement('td');
+                    tdName.innerText = item.filled_name;
+                    tr.appendChild(tdName);
+                    var tdCell = document.createElement('td');
+                    tdCell.innerText = item.filled_cell;
+                    tr.appendChild(tdCell);
+                    var tdDate = document.createElement('td');
+                    tdDate.innerText = item.create_date;
+                    tr.appendChild(tdDate);
+                    data.appendChild(tr);
+                }
+            }
+            
+
+
+        }
+    })
+</script>
