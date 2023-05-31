@@ -44,6 +44,14 @@ namespace LuqinMiniAppBase.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult<IEnumerable<Health>>> GetByName(string name)
+        {
+            name = Util.UrlDecode(name);
+            var hList = await _db.Health.Where(h => h.name.Trim().Equals(name.Trim())).ToListAsync();
+            return Ok(hList);
+        }
+
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Health>>> GetAll()
         {
             return await _db.Health.ToListAsync();
