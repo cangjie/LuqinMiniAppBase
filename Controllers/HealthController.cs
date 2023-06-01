@@ -31,12 +31,13 @@ namespace LuqinMiniAppBase.Controllers
         [HttpPost]
         public async Task<ActionResult<Health>> PostHealth(Health health)
         {
+            /*
             var healthList = await _db.Health.Where(h => h.name.Trim().Equals(health.name)).ToListAsync();
             if (healthList.Count > 0)
             {
                 return BadRequest();
             }
-
+            */
             await _db.AddAsync(health);
             await _db.SaveChangesAsync();
             return Ok(health);
