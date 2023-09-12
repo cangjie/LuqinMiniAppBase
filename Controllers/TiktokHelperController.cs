@@ -36,12 +36,21 @@ namespace LuqinMiniAppBase.Controllers
             string loginUrl = "https://" + _settings.tiktokDomain + "/api/apps/v2/jscode2session";
             string retStr = Util.GetWebContent(loginUrl, postData, "application/json");
             Code2Session codeObj = JsonConvert.DeserializeObject<Code2Session>(retStr);
-
-            if (codeObj.data.session_key.Trim().Equals(""))
+            string sessionKey = codeObj.data.session_key.Trim();
+            if (sessionKey.Equals(""))
             {
                 return BadRequest();
             }
-            MiniSession session = new MiniSession()
+
+
+            MiniSession session = await _db.miniSession.FindAsync(sessionKey);
+
+            if (session != null)
+            {
+                return sessionKey.Trim();
+            }
+
+            session = new MiniSession()
             {
                 session_key = codeObj.data.session_key,
                 open_id = codeObj.data.openid,
