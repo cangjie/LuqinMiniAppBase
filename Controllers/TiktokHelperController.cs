@@ -37,22 +37,17 @@ namespace LuqinMiniAppBase.Controllers
             string retStr = Util.GetWebContent(loginUrl, postData, "application/json");
             Code2Session codeObj = JsonConvert.DeserializeObject<Code2Session>(retStr);
 
-            try
+          
+            MiniSession session = new MiniSession()
             {
-                MiniSession session = new MiniSession()
-                {
-                    session_key = codeObj.data.session_key,
-                    open_id = codeObj.data.openid,
-                    session_type = "tiktok"
-                };
-                await _db.miniSession.AddAsync(session);
-                await _db.SaveChangesAsync();
-                return Ok(session.session_key);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+                session_key = codeObj.data.session_key,
+                open_id = codeObj.data.openid,
+                session_type = "tiktok"
+            };
+            await _db.miniSession.AddAsync(session);
+            await _db.SaveChangesAsync();
+            return Ok(session.session_key);
+            
         }
 
         [HttpGet]
