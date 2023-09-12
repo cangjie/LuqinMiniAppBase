@@ -37,7 +37,10 @@ namespace LuqinMiniAppBase.Controllers
             string retStr = Util.GetWebContent(loginUrl, postData, "application/json");
             Code2Session codeObj = JsonConvert.DeserializeObject<Code2Session>(retStr);
 
-          
+            if (codeObj.data.session_key.Trim().Equals(""))
+            {
+                return BadRequest();
+            }
             MiniSession session = new MiniSession()
             {
                 session_key = codeObj.data.session_key,
