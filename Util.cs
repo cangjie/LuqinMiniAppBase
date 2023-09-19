@@ -2,6 +2,9 @@
 using System.IO;
 using System.Net;
 using System.Web;
+using System.Text.Encodings;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace LuqinMiniAppBase
 {
@@ -74,10 +77,13 @@ namespace LuqinMiniAppBase
 
         public static string GetWebContent(string url, string postData, string contentType)
         {
+            string host = url.Replace("https://", "").Replace("http://", "").Trim();
+            host = host.Split('/')[0].Trim();
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
             req.Method = "POST";
             req.ContentType = contentType;
-            req.ContentLength = postData.Length;
+            //req.ContentLength = postData.Length;
+            req.Host = host;
             Stream sPost = req.GetRequestStream();
             StreamWriter sw = new StreamWriter(sPost);
             sw.Write(postData);
@@ -97,6 +103,19 @@ namespace LuqinMiniAppBase
         {
             TimeSpan ts = currentDateTime - new DateTime(1970, 1, 1, 0, 0, 0, 0);
             return Convert.ToInt64(ts.TotalMilliseconds).ToString();
+        }
+
+        public static string GetMd5(string str)
+        {
+            byte[] oriByteArr = Encoding.UTF8.GetBytes(str.Trim());
+            MD5 md5 = MD5.Create();
+            byte[] resultByteArr =  md5.ComputeHash(oriByteArr);
+            string result = "";
+            for (int i = 0; i < resultByteArr.Length; i++)
+            {
+                result += resultByteArr[i].ToString("x");
+            }
+            return result;
         }
     }
 }
