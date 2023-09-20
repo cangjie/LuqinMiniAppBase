@@ -47,7 +47,7 @@ namespace LuqinMiniAppBase.Controllers
         public ActionResult<TiktokPrepayOrder> PreOrderTest(double amount, string sub, string body)
         {
             string api = "https://" + _settings.tiktokDomain + "/api/apps/ecpay/v1/create_order";
-            api = "https://open-sandbox.douyin.com/api/apps/ecpay/v1/create_order";
+            //api = "https://open-sandbox.douyin.com/api/apps/ecpay/v1/create_order";
             string outTradeNo = Util.GetLongTimeStamp(DateTime.Now);
             //double amount = 1;
             //string sub = "测试商品";
@@ -55,9 +55,9 @@ namespace LuqinMiniAppBase.Controllers
             amount = Math.Round(amount * 100, 0);
             int validTime = 180;
             string sign = "";
-            string extra = "";
+            string extra = "测试测试";
             string notify = "https://mini.luqinwenda.com/TiktokHelper/PaymentCallback";
-            string salt = "M0Q1kGQoz0k60fL7myRHhBSgHZk9subnyIqEWCyq";
+            string salt = _settings.tiktokSalt;
 
             //Comparer<string> comparer = System.Collections.Generic.Comparer<string>.Create(StringComparer.Ordinal);
 
@@ -133,8 +133,10 @@ namespace LuqinMiniAppBase.Controllers
         {
             string postData = "{ \"appid\": \"" + _settings.tiktokAppId.Trim() + "\", \"secret\": \"" + _settings.tiktokAppSecret.Trim() + "\", "
                 + " \"code\": \"" + code.Trim() + "\"}";
+            Console.WriteLine(postData);
             string loginUrl = "https://" + _settings.tiktokDomain + "/api/apps/v2/jscode2session";
             string retStr = Util.GetWebContent(loginUrl, postData, "application/json");
+            Console.WriteLine(retStr);
             Code2Session codeObj = JsonConvert.DeserializeObject<Code2Session>(retStr);
             string sessionKey = codeObj.data.session_key.Trim();
             if (sessionKey.Equals(""))
