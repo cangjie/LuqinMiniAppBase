@@ -113,7 +113,7 @@ namespace LuqinMiniAppBase
             string result = "";
             for (int i = 0; i < resultByteArr.Length; i++)
             {
-                result += resultByteArr[i].ToString("x");
+                result += resultByteArr[i].ToString("x").PadLeft(2, '0');
             }
             return result;
         }

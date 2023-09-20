@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 //using SnowmeetApi.Models.Users;
 using LuqinMiniAppBase.Models;
 using System.Collections.Generic;
-using static System.Net.Mime.MediaTypeNames;
+using Newtonsoft.Json;
+using static LuqinMiniAppBase.Controllers.TiktokHelperController.TiktokPrepayOrder;
 
 namespace LuqinMiniAppBase.Controllers
 {
@@ -23,6 +24,18 @@ namespace LuqinMiniAppBase.Controllers
 
         private readonly Settings _settings;
 
+        public class TiktokPrepayOrder
+        {
+            public class OrderStruct
+            {
+                public string order_id { get; set; }
+                public string order_token { get; set; }
+            }
+            public string err_no { get; set; }
+            public OrderStruct data { get; set; }
+            
+        }
+
         public TiktokHelperController(Db db, IConfiguration config)
 		{
             _db = db;
@@ -31,17 +44,18 @@ namespace LuqinMiniAppBase.Controllers
         }
 
         [HttpGet]
-        public void PreOrderTest()
+        public ActionResult<TiktokPrepayOrder> PreOrderTest(double amount, string sub, string body)
         {
             string api = "https://" + _settings.tiktokDomain + "/api/apps/ecpay/v1/create_order";
             api = "https://open-sandbox.douyin.com/api/apps/ecpay/v1/create_order";
             string outTradeNo = Util.GetLongTimeStamp(DateTime.Now);
-            double amount = 1;
-            string sub = "测试商品";
-            string body = "测试商品详细说明";
+            //double amount = 1;
+            //string sub = "测试商品";
+            //string body = "测试商品详细说明";
+            amount = Math.Round(amount * 100, 0);
             int validTime = 180;
             string sign = "";
-            string extra = "附加信息";
+            string extra = "";
             string notify = "https://mini.luqinwenda.com/TiktokHelper/PaymentCallback";
             string salt = "M0Q1kGQoz0k60fL7myRHhBSgHZk9subnyIqEWCyq";
 
@@ -70,9 +84,12 @@ namespace LuqinMiniAppBase.Controllers
             string requestJson = "{ \"app_id\": \"" + _settings.tiktokAppId + "\", \"out_order_no\": \"" + outTradeNo + "\", \"total_amount\": " + amount.ToString()
                 + ",  \"subject\": \"" + sub + "\",  \"body\": \"" + body + "\",   \"valid_time\": " + validTime.ToString()
                 + " ,  \"sign\": \"" + sign + "\",  \"cp_extra\": \"" + extra + "\",  \"notify_url\": \"" + notify + "\" }";
+            Console.WriteLine(requestJson);
             Console.WriteLine(cyStr);
             string r = Util.GetWebContent(api, requestJson, "application/json");
-            Console.WriteLine(r);
+            TiktokPrepayOrder rObj = JsonConvert.DeserializeObject<TiktokPrepayOrder>(r);
+            return Ok(rObj);
+            //Console.WriteLine(r);
         }
 
         [HttpGet]
