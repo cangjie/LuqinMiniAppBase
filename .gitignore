@@ -12,7 +12,7 @@
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
-
+tt_payment.txt
 # Mono auto generated files
 mono_crash.*
 

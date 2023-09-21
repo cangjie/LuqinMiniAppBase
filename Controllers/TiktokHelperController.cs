@@ -69,7 +69,7 @@ namespace LuqinMiniAppBase.Controllers
             int validTime = 180;
             string sign = "";
             string extra = "测试测试";
-            string notify = "https://mini.luqinwenda.com/core/TiktokHelper/PaymentCallback";
+            //string notify = "https://mini.luqinwenda.com/core/TiktokHelper/PaymentCallback";
             string salt = _settings.tiktokSalt;
 
             //Comparer<string> comparer = System.Collections.Generic.Comparer<string>.Create(StringComparer.Ordinal);
@@ -82,7 +82,7 @@ namespace LuqinMiniAppBase.Controllers
             sortParam.Add(body);
             sortParam.Add(validTime.ToString());
             sortParam.Add(extra);
-            sortParam.Add(notify);
+            //sortParam.Add(notify);
             sortParam.Add(salt);
 
             string cyStr = "";
@@ -96,7 +96,7 @@ namespace LuqinMiniAppBase.Controllers
 
             string requestJson = "{ \"app_id\": \"" + _settings.tiktokAppId + "\", \"out_order_no\": \"" + outTradeNo + "\", \"total_amount\": " + amount.ToString()
                 + ",  \"subject\": \"" + sub + "\",  \"body\": \"" + body + "\",   \"valid_time\": " + validTime.ToString()
-                + " ,  \"sign\": \"" + sign + "\",  \"cp_extra\": \"" + extra + "\",  \"notify_url\": \"" + notify + "\" }";
+                + " ,  \"sign\": \"" + sign + "\",  \"cp_extra\": \"" + extra + "\" }";
             Console.WriteLine(requestJson);
             Console.WriteLine(cyStr);
             string r = Util.GetWebContent(api, requestJson, "application/json");
