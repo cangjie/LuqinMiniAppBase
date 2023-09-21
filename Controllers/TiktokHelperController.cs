@@ -45,10 +45,13 @@ namespace LuqinMiniAppBase.Controllers
             _settings = Settings.GetSettings(_config);
         }
 
-        [HttpGet]
-        public ActionResult<string> PaymentCallback(string timestamp, string nonce, string msg, string type, string msg_signature)
+        [HttpPost]
+        public ActionResult<string> PaymentCallback()
         {
-            string callBackStr = DateTime.Now.ToString() + "\t" + timestamp + "\t" + nonce + "\t" + msg + "\t" + type + "\t" + msg_signature;
+            StreamReader sr = new StreamReader(Request.Body);
+            string postStr = sr.ReadToEnd();
+            sr.Close();
+            string callBackStr = DateTime.Now.ToString() + "\t" + postStr;
             System.IO.File.AppendAllText(Util.workingPath + "/tt_payment.txt", callBackStr);
             return Ok("{  \"err_no\": 0,  \"err_tips\": \"success\"}");
         }
