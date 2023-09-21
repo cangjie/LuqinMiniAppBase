@@ -36,6 +36,14 @@ namespace LuqinMiniAppBase.Controllers
             
         }
 
+        public class TiktokPaymentCallBack
+        {
+            public string timestamp { get; set; }
+            public string nonce { get; set; }
+            public string msg { get; set; }
+            public string msg_signature { get; set; }
+        }
+
         
 
         public TiktokHelperController(Db db, IConfiguration config)
@@ -51,9 +59,36 @@ namespace LuqinMiniAppBase.Controllers
             StreamReader sr = new StreamReader(Request.Body);
             string postStr = await sr.ReadToEndAsync();
             sr.Close();
-            string callBackStr = DateTime.Now.ToString() + "\t" + postStr;
+            TiktokPaymentCallBack callBack = JsonConvert.DeserializeObject<TiktokPaymentCallBack>(postStr);
+            if (callBack == null)
+            {
+                return BadRequest();
+            }
+            SortedSet<string> sl = new SortedSet<string>();
+            sl.Add(callBack.timestamp.Trim());
+            sl.Add(callBack.msg.Trim());
+            sl.Add(callBack.nonce.Trim());
+
+            string cyStr = "";
+            foreach (string s in sl)
+            {
+                cyStr += s.Trim();
+            }
+            string sign = Util.GetSha1(cyStr);
+            bool valid = false;
+            if (sign.Trim().Equals(callBack.msg_signature.Trim()))
+            {
+                valid = true;
+            }
+            string callBackStr = DateTime.Now.ToString() + "\t" + valid.ToString()  +  "\t" + postStr;
             System.IO.File.AppendAllText(Util.workingPath + "/tt_payment.txt", callBackStr + "\r\n");
             return Ok("{  \"err_no\": 0,  \"err_tips\": \"success\"}");
+        }
+
+        [HttpGet]
+        public ActionResult<string> GetSha1(string str)
+        {
+            return Ok(Util.GetSha1(str));
         }
 
         [HttpGet]

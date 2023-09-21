@@ -117,5 +117,19 @@ namespace LuqinMiniAppBase
             }
             return result;
         }
+
+        public static string GetSha1(string str)
+        {
+            byte[] oriByteArr = Encoding.UTF8.GetBytes(str.Trim());
+            SHA1 sha1 = SHA1.Create();
+            byte[] resultByteArr = sha1.ComputeHash(oriByteArr);
+            string result = "";
+            for (int i = 0; i < resultByteArr.Length; i++)
+            {
+                result += resultByteArr[i].ToString("x").PadLeft(2, '0');
+            }
+            return result;
+        }
     }
+
 }
