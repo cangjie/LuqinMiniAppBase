@@ -36,11 +36,21 @@ namespace LuqinMiniAppBase.Controllers
             
         }
 
+        
+
         public TiktokHelperController(Db db, IConfiguration config)
 		{
             _db = db;
             _config = config;
             _settings = Settings.GetSettings(_config);
+        }
+
+        [HttpGet]
+        public ActionResult<string> PaymentCallback(string timestamp, string nonce, string msg, string type, string msg_signature)
+        {
+            string callBackStr = DateTime.Now.ToString() + "\t" + timestamp + "\t" + nonce + "\t" + msg + "\t" + type + "\t" + msg_signature;
+            System.IO.File.AppendAllText(Util.workingPath + "/tt_payment.txt", callBackStr);
+            return Ok("{  \"err_no\": 0,  \"err_tips\": \"success\"}");
         }
 
         [HttpGet]
