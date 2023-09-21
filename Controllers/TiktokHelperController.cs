@@ -69,7 +69,7 @@ namespace LuqinMiniAppBase.Controllers
             int validTime = 180;
             string sign = "";
             string extra = "测试测试";
-            string notify = "https://mini.luqinwenda.com/TiktokHelper/PaymentCallback";
+            string notify = "https://mini.luqinwenda.com/core/TiktokHelper/PaymentCallback";
             string salt = _settings.tiktokSalt;
 
             //Comparer<string> comparer = System.Collections.Generic.Comparer<string>.Create(StringComparer.Ordinal);
