@@ -82,7 +82,7 @@ namespace LuqinMiniAppBase.Controllers
                 valid = true;
             }
             string callBackStr = DateTime.Now.ToString() + "\t" + valid.ToString()  +  "\t" + postStr;
-            System.IO.File.AppendAllText(Util.workingPath + "/tt_payment.txt", callBackStr + "\r\n" + callBack.msg + "\r\n");
+            System.IO.File.AppendAllText(Util.workingPath + "/tt_payment.txt", callBackStr + "\r\n" + callBack.msg + "\r\n" + cyStr.Trim() + "\r\n");
             return Ok("{  \"err_no\": 0,  \"err_tips\": \"success\"}");
         }
 
