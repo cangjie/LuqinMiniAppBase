@@ -65,11 +65,11 @@ namespace LuqinMiniAppBase.Controllers
                 return BadRequest();
             }
             callBack.msg = callBack.msg.Replace(@"\", "");
-            SortedSet<string> sl = new SortedSet<string>();
+            SortedSet<string> sl = new SortedSet<string>(StringComparer.Ordinal);
             sl.Add(callBack.timestamp.Trim());
-            sl.Add(callBack.msg);
+            sl.Add(callBack.msg.Trim());
             sl.Add(callBack.nonce.Trim());
-            sl.Add(_settings.tiktokToken);
+            sl.Add(_settings.tiktokToken.Trim());
             string cyStr = "";
             foreach (string s in sl)
             {
