@@ -46,10 +46,10 @@ namespace LuqinMiniAppBase.Controllers
         }
 
         [HttpPost]
-        public ActionResult<string> PaymentCallback()
+        public async Task<ActionResult<string>> PaymentCallback()
         {
             StreamReader sr = new StreamReader(Request.Body);
-            string postStr = sr.ReadToEnd();
+            string postStr = await sr.ReadToEndAsync();
             sr.Close();
             string callBackStr = DateTime.Now.ToString() + "\t" + postStr;
             System.IO.File.AppendAllText(Util.workingPath + "/tt_payment.txt", callBackStr);
