@@ -52,7 +52,7 @@ namespace LuqinMiniAppBase.Controllers
             string postStr = await sr.ReadToEndAsync();
             sr.Close();
             string callBackStr = DateTime.Now.ToString() + "\t" + postStr;
-            System.IO.File.AppendAllText(Util.workingPath + "/tt_payment.txt", callBackStr);
+            System.IO.File.AppendAllText(Util.workingPath + "/tt_payment.txt", callBackStr + "\r\n");
             return Ok("{  \"err_no\": 0,  \"err_tips\": \"success\"}");
         }
 
