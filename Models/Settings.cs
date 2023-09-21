@@ -13,6 +13,7 @@ namespace LuqinMiniAppBase.Models
         public string? tiktokDomain { get; set; }
         public string? tiktokAppSecret { get; set; }
         public string? tiktokSalt { get; set; }
+        public string? tiktokToken { get; set; }
 
         public static Settings GetSettings(IConfiguration config)
         {
@@ -26,6 +27,7 @@ namespace LuqinMiniAppBase.Models
             string tiktokDomain = settings.GetSection("TiktokDomain").Value.Trim();
             string tiktokAppSecret = settings.GetSection("TiktokAppSecret").Value.Trim();
             string tiktokSalt = settings.GetSection("TiktokSalt").Value.Trim();
+            string tiktokToken = settings.GetSection("TiktokToken").Value.Trim();
             return new Settings()
             {
                 appId = appId,
@@ -36,7 +38,8 @@ namespace LuqinMiniAppBase.Models
                 tiktokAppId = tiktokAppId,
                 tiktokDomain = tiktokDomain,
                 tiktokAppSecret = tiktokAppSecret,
-                tiktokSalt = tiktokSalt
+                tiktokSalt = tiktokSalt,
+                tiktokToken = tiktokToken
             };
         }
     }

@@ -69,7 +69,7 @@ namespace LuqinMiniAppBase.Controllers
             sl.Add(callBack.timestamp.Trim());
             sl.Add(callBack.msg);
             sl.Add(callBack.nonce.Trim());
-
+            sl.Add(_settings.tiktokToken);
             string cyStr = "";
             foreach (string s in sl)
             {
