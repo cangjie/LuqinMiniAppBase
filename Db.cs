@@ -60,6 +60,8 @@ namespace LuqinMiniAppBase
         public DbSet<LuqinMiniAppBase.Models.Health> Health { get; set; }
 
         public DbSet<LuqinMiniAppBase.Models.MiniSession> miniSession { get; set; }
+
+        public DbSet<LuqinMiniAppBase.Models.CampRegistration> CampRegistration { get; set; }
         
 
     }
