@@ -10,7 +10,7 @@ using LuqinMiniAppBase.Models;
 
 namespace LuqinMiniAppBase.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class CampRegistrationController : ControllerBase
     {
@@ -20,6 +20,10 @@ namespace LuqinMiniAppBase.Controllers
         {
             _context = context;
         }
+
+
+
+        /*
 
         // GET: api/CampRegistration
         [HttpGet]
@@ -99,7 +103,7 @@ namespace LuqinMiniAppBase.Controllers
 
             return NoContent();
         }
-
+        */
         private bool CampRegistrationExists(int id)
         {
             return _context.CampRegistration.Any(e => e.id == id);

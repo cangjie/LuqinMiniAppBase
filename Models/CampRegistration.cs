@@ -10,6 +10,7 @@ namespace LuqinMiniAppBase.Models
 		[Key]
 		public int		id                  {get; set;}
 		public string	camp_name           {get; set;}
+        public string   open_id             {get; set;}
         public string   child_name          {get; set;}
         public string   child_gender        {get; set;}
         public string   child_age           {get; set;}
