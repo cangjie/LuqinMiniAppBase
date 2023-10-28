@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LuqinMiniAppBase;
 using LuqinMiniAppBase.Models;
-
+using Microsoft.Extensions.Configuration;
 namespace LuqinMiniAppBase.Controllers
 {
     [Route("api/[controller]/[action]")]
@@ -16,10 +16,75 @@ namespace LuqinMiniAppBase.Controllers
     {
         private readonly Db _context;
 
-        public CampRegistrationController(Db context)
+        private readonly IConfiguration _config;
+
+        private UserHelperController _userHelper;
+
+        public CampRegistrationController(Db context, IConfiguration config)
         {
             _context = context;
+            _userHelper = new UserHelperController(_context, config);
         }
+
+        [HttpPost("{sessionKey}")]
+        public async Task<ActionResult<CampRegistration>> NewRegister(string sessionKey, CampRegistration registration)
+        {
+            sessionKey = Util.UrlDecode(sessionKey);
+            int userId =  _userHelper.CheckToken(sessionKey);
+            if (userId <= 0)
+            {
+                return BadRequest();
+            }
+            registration.user_id = userId;
+            await _context.CampRegistration.AddAsync(registration);
+            await _context.SaveChangesAsync();
+            return Ok(registration);
+        }
+
+        [HttpPost("{sessionKey}")]
+        public async Task<ActionResult<CampRegistration>> ModRegister(string sessionKey, CampRegistration registration)
+        {
+            sessionKey = Util.UrlDecode(sessionKey);
+            int userId = _userHelper.CheckToken(sessionKey);
+            if (userId <= 0)
+            {
+                return BadRequest();
+            }
+
+            CampRegistration oriReg = await _context.CampRegistration.FindAsync(registration.id);
+            if (oriReg == null || oriReg.user_id != userId)
+            {
+                return NotFound();
+            }
+            oriReg = registration;
+            _context.Entry(oriReg).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return Ok(oriReg);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CampRegistration>> GetRegistration(int id, string sessionKey)
+        {
+            sessionKey = Util.UrlDecode(sessionKey);
+            int userId = _userHelper.CheckToken(sessionKey);
+            CampRegistration reg = await _context.CampRegistration.FindAsync(id);
+            if (reg == null || reg.user_id != userId)
+            {
+                return NotFound();
+            }
+            return Ok(reg);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<CampRegistration>>> GetList(string sessionKey)
+        {
+            sessionKey = Util.UrlDecode(sessionKey);
+            int userId = _userHelper.CheckToken(sessionKey);
+            return Ok(await _context.CampRegistration.Where(c => c.user_id == userId).ToListAsync());
+        }
+
+
 
 
 
