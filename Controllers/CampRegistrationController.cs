@@ -27,7 +27,7 @@ namespace LuqinMiniAppBase.Controllers
         }
 
         [HttpPost("{sessionKey}")]
-        public async Task<ActionResult<CampRegistration>> NewRegister(string sessionKey, CampRegistration registration)
+        public async Task<ActionResult<CampRegistration>> NewRegister(string sessionKey, [FromBody]CampRegistration registration)
         {
             sessionKey = Util.UrlDecode(sessionKey);
             int userId =  _userHelper.CheckToken(sessionKey);
