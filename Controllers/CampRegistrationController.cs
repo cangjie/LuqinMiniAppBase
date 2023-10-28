@@ -26,14 +26,14 @@ namespace LuqinMiniAppBase.Controllers
             _userHelper = new UserHelperController(_context, config);
         }
 
-        [HttpPost("{sessionKey}")]
-        public ActionResult<CampRegistration> Test([FromRoute]string sessionKey, CampRegistration reg)
+        [HttpPost]
+        public ActionResult<CampRegistration> Test([FromQuery] string sessionKey, CampRegistration reg)
         {
             return Ok(reg);
         }
 
-        [HttpPost("{sessionKey}")]
-        public async Task<ActionResult<CampRegistration>> NewRegister([FromRoute]string sessionKey, [FromBody]CampRegistration registration)
+        [HttpPost]
+        public async Task<ActionResult<CampRegistration>> NewRegister([FromQuery] string sessionKey, [FromBody]CampRegistration registration)
         {
             sessionKey = Util.UrlDecode(sessionKey);
             int userId =  _userHelper.CheckToken(sessionKey);
@@ -47,8 +47,8 @@ namespace LuqinMiniAppBase.Controllers
             return Ok(registration);
         }
 
-        [HttpPost("{sessionKey}")]
-        public async Task<ActionResult<CampRegistration>> ModRegister([FromRoute] string sessionKey, [FromBody]CampRegistration registration)
+        [HttpPost]
+        public async Task<ActionResult<CampRegistration>> ModRegister([FromQuery] string sessionKey, [FromBody]CampRegistration registration)
         {
             sessionKey = Util.UrlDecode(sessionKey);
             int userId = _userHelper.CheckToken(sessionKey);
