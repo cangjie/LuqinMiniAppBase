@@ -27,7 +27,7 @@ namespace LuqinMiniAppBase.Controllers
         }
 
         [HttpPost]
-        public ActionResult<CampRegistration> Test(CampRegistration reg)
+        public ActionResult<CampRegistration> Test([FromRoute]string sessionKey, CampRegistration reg)
         {
             return Ok(reg);
         }
