@@ -27,7 +27,7 @@ namespace LuqinMiniAppBase.Controllers
         }
 
         [HttpPost("{sessionKey}")]
-        public async Task<ActionResult<CampRegistration>> NewRegister(string sessionKey, [FromBody]CampRegistration registration)
+        public async Task<ActionResult<CampRegistration>> NewRegister([FromRoute]string sessionKey, [FromBody]CampRegistration registration)
         {
             sessionKey = Util.UrlDecode(sessionKey);
             int userId =  _userHelper.CheckToken(sessionKey);
@@ -42,7 +42,7 @@ namespace LuqinMiniAppBase.Controllers
         }
 
         [HttpPost("{sessionKey}")]
-        public async Task<ActionResult<CampRegistration>> ModRegister(string sessionKey, [FromBody]CampRegistration registration)
+        public async Task<ActionResult<CampRegistration>> ModRegister([FromRoute] string sessionKey, [FromBody]CampRegistration registration)
         {
             sessionKey = Util.UrlDecode(sessionKey);
             int userId = _userHelper.CheckToken(sessionKey);
@@ -51,16 +51,16 @@ namespace LuqinMiniAppBase.Controllers
                 return BadRequest();
             }
 
-            CampRegistration oriReg = await _context.CampRegistration.FindAsync(registration.id);
-            if (oriReg == null || oriReg.user_id != userId)
+            //CampRegistration oriReg = await _context.CampRegistration.FindAsync(registration.id);
+            if (registration == null || registration.user_id != userId)
             {
                 return NotFound();
             }
-            oriReg = registration;
-            _context.Entry(oriReg).State = EntityState.Modified;
+            //registration = registration;
+            _context.Entry(registration).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return Ok(oriReg);
+            return Ok(registration);
         }
 
         [HttpGet("{id}")]
