@@ -26,6 +26,12 @@ namespace LuqinMiniAppBase.Controllers
             _userHelper = new UserHelperController(_context, config);
         }
 
+        [HttpPost]
+        public ActionResult<CampRegistration> Test(CampRegistration reg)
+        {
+            return Ok(reg);
+        }
+
         [HttpPost("{sessionKey}")]
         public async Task<ActionResult<CampRegistration>> NewRegister([FromRoute]string sessionKey, [FromBody]CampRegistration registration)
         {
