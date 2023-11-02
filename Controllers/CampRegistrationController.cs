@@ -83,7 +83,7 @@ namespace LuqinMiniAppBase.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CampRegistration>>> GetList(string sessionKey)
+        public async Task<ActionResult<IEnumerable<CampRegistration>>> GetList(string sessionKey, string campName = "ctu_2401")
         {
             sessionKey = Util.UrlDecode(sessionKey);
             int userId = _userHelper.CheckToken(sessionKey);
