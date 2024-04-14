@@ -11,6 +11,7 @@ namespace LuqinMiniAppBase.Models
 
         public string oa_union_id { get; set; }
 
+       
         public int is_admin { get; set; } = 0;
 
         [NotMapped]

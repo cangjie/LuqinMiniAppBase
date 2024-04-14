@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System.Linq;
 //using SnowmeetApi.Data;
 //using SnowmeetApi.Models;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using LuqinMiniAppBase.Models;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using static LuqinMiniAppBase.Controllers.TiktokHelperController.TiktokPrepayOrder;
-
+using Microsoft.EntityFrameworkCore;
 namespace LuqinMiniAppBase.Controllers
 {
     [Route("core/[controller]/[action]")]
@@ -174,8 +175,149 @@ namespace LuqinMiniAppBase.Controllers
 
         }
 
-        
+        [NonAction]
+        public async Task<TTUser> GetTiktokUser(string sessionKey)
+        {
+            sessionKey = Util.UrlDecode(sessionKey);
+            var sL = await _db.miniSession.Where(s => (s.session_type.Trim().Equals("tiktok") && s.session_key.Trim().Equals(sessionKey)))
+                .AsNoTracking().ToListAsync();
+            if (sL == null || sL.Count == 0)
+            {
+                return null;
+            }
+            TTUser ttUser = await _db.tiktokUser.FindAsync(sL[0].open_id, _settings.tiktokAppId);
+            return ttUser;
+        }
 
+        [HttpGet]
+        public async Task<ActionResult<ClubJoinApp>> GetJoinApp(string sessionKey, int clubId = 1)
+        {
+            TTUser ttUser = await GetTiktokUser(sessionKey);
+            if (ttUser.user_id == 0)
+            {
+                return NotFound();
+            }
+            return Ok(await _db.clubJoinApp.FindAsync(clubId, ttUser.user_id));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<ClubJoinApp>> JoinClub(string cell,
+            string realName, string gender,  string sessionKey, string memo = "",  int clubId = 1)
+        {
+            sessionKey = Util.UrlDecode(sessionKey);
+            TTUser ttUser = await GetTiktokUser(sessionKey);
+            if (ttUser == null)
+            {
+                return NotFound();
+            }
+            //bool userValid = false;
+            int userId = 0;
+            if (ttUser.user_id > 0)
+            {
+                UserCollected uC = await _db.userCollected.FindAsync(ttUser.user_id);
+                if (uC.cell.Trim().Equals(cell.Trim()))
+                {
+                    userId = uC.id;
+                }
+            }
+            else
+            {
+                UserCollected uC = await CollectUserInfo(cell, ttUser.open_id.Trim());
+                if (uC != null)
+                {
+                    userId = uC.id;   
+                }
+            }
+            if (userId == 0)
+            {
+                return BadRequest();
+            }
+
+            var joinList = await _db.clubJoinApp.Where(c => c.club_id == clubId && c.user_id == userId)
+                .AsNoTracking().ToListAsync();
+            if (joinList == null || joinList.Count == 0)
+            {
+                UserCollected newUser = await _db.userCollected.FindAsync(userId);
+                newUser.cell = cell.Trim();
+                newUser.real_name = realName.Trim();
+                newUser.gender = gender.Trim();
+                _db.userCollected.Entry(newUser).State = EntityState.Modified;
+
+                ClubJoinApp joinApp = new ClubJoinApp()
+                {
+                    club_id = clubId,
+                    user_id = userId,
+                    cell = cell.Trim(),
+                    real_name = realName.Trim(),
+                    gender = gender.Trim(),
+                    memo = memo.Trim()
+                };
+                await _db.clubJoinApp.AddAsync(joinApp);
+                await _db.SaveChangesAsync();
+                return Ok(joinApp);
+            }
+            else
+            {
+                return Ok(joinList[0]);
+            }
+
+            
+
+
+
+
+        }
+
+
+        [NonAction]
+        public async Task<UserCollected> CollectUserInfo(string cell, string ttOpenId)
+        {
+            string appId = _settings.tiktokAppId.Trim();
+            var userList = await _db.userCollected.Where(u => u.cell.Trim().Equals(cell.Trim()))
+                .AsNoTracking().ToListAsync();
+            TTUser ttUser = await _db.tiktokUser.FindAsync(ttOpenId.Trim(), appId.Trim());
+            if (ttUser == null)
+            {
+                return null;
+            }
+            if ((userList == null || userList.Count == 0) && ttUser.user_id == 0)
+            {
+                UserCollected userC = new UserCollected()
+                {
+                    wechat_union_id = "",
+                    cell = cell.Trim(),
+                    real_name = "",
+                    gender = ""
+                };
+                await _db.userCollected.AddAsync(userC);
+                await _db.SaveChangesAsync();
+                ttUser.user_id = userC.id;
+                await _db.SaveChangesAsync();
+                return userC;
+            }
+            else
+            {
+                if (ttUser.user_id == 0)
+                {
+                    var ttUserList = await _db.tiktokUser.Where(t => t.user_id == userList[0].id)
+                        .AsNoTracking().ToListAsync();
+                    if (ttUserList == null || ttUserList.Count == 0)
+                    {
+                        ttUser.user_id = userList[0].id;
+                        await _db.SaveChangesAsync();
+                        return userList[0];
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
 
         [HttpGet("{code}")]
         public async Task<ActionResult<string>> Login(string code)
@@ -192,15 +334,11 @@ namespace LuqinMiniAppBase.Controllers
             {
                 return BadRequest();
             }
-
-
             MiniSession session = await _db.miniSession.FindAsync(sessionKey);
-
             if (session != null)
             {
                 return sessionKey.Trim();
             }
-
             session = new MiniSession()
             {
                 session_key = codeObj.data.session_key,
@@ -209,8 +347,19 @@ namespace LuqinMiniAppBase.Controllers
             };
             await _db.miniSession.AddAsync(session);
             await _db.SaveChangesAsync();
+            TTUser ttUser = await _db.tiktokUser.FindAsync(session.open_id, _settings.tiktokAppId);
+            if (ttUser == null)
+            {
+                ttUser = new TTUser()
+                {
+                    open_id = session.open_id.Trim(),
+                    app_id = _settings.tiktokAppId,
+                    user_id = 0
+                };
+                await _db.tiktokUser.AddAsync(ttUser);
+                await _db.SaveChangesAsync();
+            }
             return Ok(session.session_key);
-            
         }
 
         [HttpGet]

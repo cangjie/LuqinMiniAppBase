@@ -12,13 +12,16 @@ namespace LuqinMiniAppBase
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           /*
-            modelBuilder.Entity<MediaSubTitle>()
-                .HasOne(ms => ms.media_id)
-                .WithMany(m => m.mediaSubTitles)
-                .HasForeignKey(ms => ms.media_id)
-                .HasPrincipalKey(m => m.id);
-            */
+            /*
+             modelBuilder.Entity<MediaSubTitle>()
+                 .HasOne(ms => ms.media_id)
+                 .WithMany(m => m.mediaSubTitles)
+                 .HasForeignKey(ms => ms.media_id)
+                 .HasPrincipalKey(m => m.id);
+             */
+
+            modelBuilder.Entity<TTUser>().HasKey(k => new { k.open_id, k.app_id });
+            modelBuilder.Entity<ClubJoinApp>().HasKey(k => new { k.club_id, k.user_id });
         }
 
         public DbSet<MiniUser> miniUser { get; set; }
@@ -62,7 +65,13 @@ namespace LuqinMiniAppBase
         public DbSet<LuqinMiniAppBase.Models.MiniSession> miniSession { get; set; }
 
         public DbSet<LuqinMiniAppBase.Models.CampRegistration> CampRegistration { get; set; }
-        
+
+        public DbSet<LuqinMiniAppBase.Models.TTUser> tiktokUser { get; set; }
+
+        public DbSet<LuqinMiniAppBase.Models.UserCollected> userCollected { get; set; }
+
+        public DbSet<LuqinMiniAppBase.Models.ClubJoinApp> clubJoinApp { get; set; }
+
 
     }
 }
