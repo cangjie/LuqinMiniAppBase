@@ -205,6 +205,10 @@ namespace LuqinMiniAppBase.Controllers
             string realName, string gender,  string sessionKey, string memo = "",  int clubId = 1)
         {
             sessionKey = Util.UrlDecode(sessionKey);
+            realName = Util.UrlDecode(realName);
+            memo = Util.UrlDecode(memo);
+            gender = Util.UrlDecode(gender);
+
             TTUser ttUser = await GetTiktokUser(sessionKey);
             if (ttUser == null)
             {
