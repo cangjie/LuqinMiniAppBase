@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 //using SnowmeetApi.Models.Users;
 using LuqinMiniAppBase.Models;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 using static LuqinMiniAppBase.Controllers.TiktokHelperController.TiktokPrepayOrder;
 using Microsoft.EntityFrameworkCore;
 namespace LuqinMiniAppBase.Controllers
