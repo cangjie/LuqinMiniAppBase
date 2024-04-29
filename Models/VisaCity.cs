@@ -9,7 +9,7 @@ namespace LuqinMiniAppBase.Models
 		[Key]
 		public int id { get; set; }
 
-		public string openId { get; set; }
+		public string open_id { get; set; }
 		public string child_name { get; set; }
 		public string visa_city { get; set; }
 		public string memo { get; set; }

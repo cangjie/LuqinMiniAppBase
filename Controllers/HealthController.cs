@@ -80,7 +80,7 @@ namespace LuqinMiniAppBase.Controllers
             string openId = _userHelper.GetOpenId(userId, _settings.originalId);
             VisaCity v = new VisaCity()
             {
-                openId = openId,
+                open_id = openId,
                 child_name = childName,
                 visa_city = city,
                 memo = memo
@@ -89,7 +89,7 @@ namespace LuqinMiniAppBase.Controllers
             {
                 await _db.visaCity.AddAsync(v);
                 await _db.SaveChangesAsync();
-                v.openId = "";
+                v.open_id = "";
                 return Ok(v);
             }
             catch
