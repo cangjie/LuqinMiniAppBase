@@ -72,6 +72,8 @@ namespace LuqinMiniAppBase
 
         public DbSet<LuqinMiniAppBase.Models.ClubJoinApp> clubJoinApp { get; set; }
 
+        public DbSet<VisaCity> visaCity { get; set; }
+
 
     }
 }

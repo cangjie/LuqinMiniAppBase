@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LuqinMiniAppBase;
 using LuqinMiniAppBase.Models;
+using Microsoft.Extensions.Configuration;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace LuqinMiniAppBase.Controllers
 {
@@ -15,10 +17,18 @@ namespace LuqinMiniAppBase.Controllers
     public class HealthController : ControllerBase
     {
         private readonly Db _db;
+        private readonly IConfiguration _config;
 
-        public HealthController(Db context)
+        private readonly Settings _settings;
+
+        private readonly UserHelperController _userHelper;
+
+        public HealthController(Db context, IConfiguration config)
         {
             _db = context;
+            _config = config;
+            _settings = Settings.GetSettings(_config);
+            _userHelper = new UserHelperController(_db, _config);
         }
 
         // GET: api/Health
@@ -56,6 +66,37 @@ namespace LuqinMiniAppBase.Controllers
         public async Task<ActionResult<IEnumerable<Health>>> GetAll()
         {
             return await _db.Health.ToListAsync();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<VisaCity>> SelectVisaCity(string childName,
+            string city, string memo, string sessionKey)
+        {
+            sessionKey = Util.UrlDecode(sessionKey);
+            childName = Util.UrlDecode(childName);
+            city = Util.UrlDecode(city);
+            memo = Util.UrlDecode(memo);
+            int userId = _userHelper.CheckToken(sessionKey);
+            string openId = _userHelper.GetOpenId(userId, _settings.originalId);
+            VisaCity v = new VisaCity()
+            {
+                openId = openId,
+                child_name = childName,
+                visa_city = city,
+                memo = memo
+            };
+            try
+            {
+                await _db.visaCity.AddAsync(v);
+                await _db.SaveChangesAsync();
+                v.openId = "";
+                return Ok(v);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+
         }
 
         /*
