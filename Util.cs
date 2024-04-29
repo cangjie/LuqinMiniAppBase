@@ -33,6 +33,10 @@ namespace LuqinMiniAppBase
 
         public static string UrlDecode(string urlStr)
         {
+            if (urlStr == null)
+            {
+                return "";
+            }
             return HttpUtility.UrlDecode(urlStr).Replace(" ", "+").Trim();
         }
 
